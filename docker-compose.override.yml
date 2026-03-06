@@ -1,0 +1,2 @@
+# Diese Datei ist leer – alle Dev-Einstellungen sind direkt in docker-compose.yml.
+# Für Production-Deployment: docker-compose.prod.yml verwenden.

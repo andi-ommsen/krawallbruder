@@ -1,0 +1,85 @@
+networks:
+  krawallbruder-network:
+    driver: bridge
+
+volumes:
+  db_data:
+
+services:
+
+  # ── Frontend: Vite Dev Server mit Hot Reload ───────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app          # lokale Dateien → Container (live sync)
+      - /app/node_modules        # node_modules aus dem Image-Layer behalten
+    environment:
+      - VITE_API_URL=http://localhost:8080
+    command: npm run dev -- --host 0.0.0.0 --port 3000
+    networks:
+      - krawallbruder-network
+    depends_on:
+      - nginx
+
+  # ── Nginx: Reverse Proxy für Symfony ──────────────────────────────────────
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./backend:/var/www/html                                  # live sync
+      - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - krawallbruder-network
+    depends_on:
+      - php
+
+  # ── PHP-FPM: Symfony Backend ──────────────────────────────────────────────
+  php:
+    build:
+      context: ./docker/php
+      dockerfile: Dockerfile
+    volumes:
+      - ./backend:/var/www/html  # lokale Dateien → Container (live sync)
+    environment:
+      - APP_ENV=dev
+      - APP_DEBUG=1
+      - DATABASE_URL=postgresql://kb_user:kb_secret@database:5432/krawallbruder?serverVersion=16&charset=utf8
+    networks:
+      - krawallbruder-network
+    depends_on:
+      database:
+        condition: service_healthy
+
+  # ── PostgreSQL ────────────────────────────────────────────────────────────
+  database:
+    image: postgres:16-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: krawallbruder
+      POSTGRES_USER: kb_user
+      POSTGRES_PASSWORD: kb_secret
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - krawallbruder-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kb_user -d krawallbruder"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Adminer: DB-Verwaltung ────────────────────────────────────────────────
+  adminer:
+    image: adminer:latest
+    ports:
+      - "8081:8080"
+    networks:
+      - krawallbruder-network
+    depends_on:
+      - database

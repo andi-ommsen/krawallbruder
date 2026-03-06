@@ -1,0 +1,40 @@
+# Claude Code local settings
+.claude/settings.local.json
+
+# Dependencies
+frontend/node_modules/
+backend/vendor/
+
+# Symfony
+backend/var/
+backend/public/bundles/
+backend/.env.local
+backend/.env.local.php
+backend/.env.*.local
+backend/config/secrets/prod/prod.decrypt.private.php
+
+# Environment / Secrets
+.env.local
+.env.*.local
+*.env.local
+
+# Docker volumes
+docker/data/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
+
+# Vite build output
+frontend/dist/

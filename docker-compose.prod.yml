@@ -1,0 +1,17 @@
+version: '3.9'
+
+# Production-Overrides: docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile        # Multi-Stage Build → statische Dateien via Nginx
+    volumes: []                     # keine Volumes in Production
+    environment:
+      - VITE_API_URL=https://api.krawallbruder.de   # Production-URL anpassen
+
+  php:
+    environment:
+      - APP_ENV=prod
+      - APP_DEBUG=0
+    volumes: []                     # keine Volumes in Production
