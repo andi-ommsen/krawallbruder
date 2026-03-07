@@ -1,8 +1,10 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { adminFetchBike, adminCreateBike, adminUpdateBike } from '../../services/api'
 import ImageUpload from '../../components/ImageUpload'
 import '../../components/ImageUpload.css'
+
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080'
 
 const EMPTY = {
   name: '',
@@ -11,8 +13,105 @@ const EMPTY = {
   description: '',
   featuredImage: '',
   technicalData: '{}',
-  gallery: '[]',
+  gallery: [],
   sortOrder: 0,
+}
+
+function GalleryManager({ images, onChange }) {
+  const [uploading, setUploading] = useState(false)
+  const [urlInput, setUrlInput] = useState('')
+  const [error, setError] = useState('')
+  const fileRef = useRef(null)
+
+  const uploadFile = async (e) => {
+    const file = e.target.files[0]
+    if (!file) return
+    setError('')
+    setUploading(true)
+    const formData = new FormData()
+    formData.append('file', file)
+    try {
+      const token = localStorage.getItem('adminToken')
+      const res = await fetch(`${API_BASE}/api/admin/upload`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}` },
+        body: formData,
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Upload fehlgeschlagen.')
+      onChange([...images, data.url])
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setUploading(false)
+      e.target.value = ''
+    }
+  }
+
+  const addUrl = () => {
+    const trimmed = urlInput.trim()
+    if (!trimmed) return
+    onChange([...images, trimmed])
+    setUrlInput('')
+  }
+
+  const remove = (idx) => onChange(images.filter((_, i) => i !== idx))
+
+  const move = (idx, dir) => {
+    const next = [...images]
+    const swap = idx + dir
+    if (swap < 0 || swap >= next.length) return
+    ;[next[idx], next[swap]] = [next[swap], next[idx]]
+    onChange(next)
+  }
+
+  return (
+    <div className="gallery-mgr">
+      <label className="admin-form__label">Galerie</label>
+
+      {/* Thumbnails */}
+      {images.length > 0 && (
+        <div className="gallery-mgr__grid">
+          {images.map((url, idx) => (
+            <div key={idx} className="gallery-mgr__item">
+              <img src={url} alt={`Bild ${idx + 1}`} className="gallery-mgr__thumb" />
+              <div className="gallery-mgr__actions">
+                <button type="button" onClick={() => move(idx, -1)} disabled={idx === 0} title="Nach vorne">←</button>
+                <button type="button" onClick={() => move(idx, 1)} disabled={idx === images.length - 1} title="Nach hinten">→</button>
+                <button type="button" onClick={() => remove(idx)} className="gallery-mgr__del" title="Entfernen">✕</button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Upload + URL hinzufügen */}
+      <div className="gallery-mgr__add">
+        <button
+          type="button"
+          className="img-upload__btn"
+          onClick={() => fileRef.current.click()}
+          disabled={uploading}
+        >
+          {uploading ? 'Lädt…' : '↑ Bild hochladen'}
+        </button>
+        <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp,image/gif" style={{ display: 'none' }} onChange={uploadFile} />
+
+        <input
+          type="text"
+          className="admin-form__input"
+          style={{ flex: 1 }}
+          value={urlInput}
+          onChange={(e) => setUrlInput(e.target.value)}
+          placeholder="oder URL eingeben…"
+          onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addUrl())}
+        />
+        <button type="button" className="img-upload__btn" onClick={addUrl}>+ URL</button>
+      </div>
+
+      {error && <p style={{ color: '#e55', fontSize: '0.82rem', margin: '0.25rem 0 0' }}>{error}</p>}
+    </div>
+  )
 }
 
 export default function AdminBikeEdit() {
@@ -36,7 +135,7 @@ export default function AdminBikeEdit() {
             description: d.description ?? '',
             featuredImage: d.featuredImage ?? '',
             technicalData: JSON.stringify(d.technicalData ?? {}, null, 2),
-            gallery: JSON.stringify(d.gallery ?? [], null, 2),
+            gallery: d.gallery ?? [],
             sortOrder: d.sortOrder ?? 0,
           })
         })
@@ -60,7 +159,6 @@ export default function AdminBikeEdit() {
       year: parseInt(form.year, 10),
       sortOrder: parseInt(form.sortOrder, 10),
       technicalData: parseJson(form.technicalData, {}),
-      gallery: parseJson(form.gallery, []),
     }
     try {
       if (isNew) {
@@ -135,16 +233,10 @@ export default function AdminBikeEdit() {
           />
         </div>
 
-        <div className="admin-form__group">
-          <label className="admin-form__label">Galerie (JSON-Array mit URLs)</label>
-          <textarea
-            className="admin-form__textarea"
-            style={{ fontFamily: 'monospace', fontSize: '0.85rem' }}
-            value={form.gallery}
-            onChange={set('gallery')}
-            placeholder={'[\n  "https://…/bild1.jpg",\n  "https://…/bild2.jpg"\n]'}
-          />
-        </div>
+        <GalleryManager
+          images={form.gallery}
+          onChange={(gallery) => setForm((p) => ({ ...p, gallery }))}
+        />
 
         <div className="admin-form__actions">
           <button type="submit" className="admin-btn admin-btn--primary">Speichern</button>
