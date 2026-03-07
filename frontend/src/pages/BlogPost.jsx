@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
+import DOMPurify from 'dompurify'
 import { fetchBlogPost, fetchBlogPosts } from '../services/api'
 import VideoPlayer from '../components/VideoPlayer'
 import './BlogPost.css'
@@ -90,7 +91,7 @@ export default function BlogPost() {
           {/* Rich-Text-Inhalt */}
           <div
             className="blog-content blog-post__content"
-            dangerouslySetInnerHTML={{ __html: post.content }}
+            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content) }}
           />
 
           {/* Eingebettetes YouTube-Video */}

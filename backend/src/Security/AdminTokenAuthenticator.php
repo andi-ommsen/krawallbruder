@@ -33,7 +33,7 @@ class AdminTokenAuthenticator extends AbstractAuthenticator
         $auth = $request->headers->get('Authorization', '');
         $token = substr($auth, 7);
 
-        if ($token !== $this->adminToken) {
+        if (!hash_equals($this->adminToken, $token)) {
             throw new CustomUserMessageAuthenticationException('Ungültiges Token.');
         }
 

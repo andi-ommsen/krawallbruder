@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
+import DOMPurify from 'dompurify'
 import { fetchBike, fetchBlogPosts } from '../services/api'
 import BlogCard from '../components/BlogCard'
 import './BikeDetail.css'
@@ -58,7 +59,7 @@ export default function BikeDetail() {
             <h2>Meine Geschichte</h2>
             <div
               className="blog-content"
-              dangerouslySetInnerHTML={{ __html: bike.description }}
+              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(bike.description) }}
             />
           </section>
 

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import DOMPurify from 'dompurify'
 import { fetchAboutPage } from '../services/api'
 import './AboutMe.css'
 
@@ -62,7 +63,7 @@ export default function AboutMe() {
         {about?.content && (
           <div
             className="blog-content about-page__text"
-            dangerouslySetInnerHTML={{ __html: about.content }}
+            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(about.content) }}
           />
         )}
 
