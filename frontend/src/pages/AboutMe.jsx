@@ -22,55 +22,43 @@ export default function AboutMe() {
 
   return (
     <div className="about-page">
+
+      {/* ── Hero: split photo / title ── */}
       <div className="about-page__hero">
-        <div className="container about-page__hero-inner">
-          <div className="about-page__profile">
-            <img
-              src={about?.profileImage || 'https://picsum.photos/seed/portrait/400/400'}
-              alt="Krawallbruder"
-              className="about-page__avatar"
-            />
-          </div>
-          <div>
-            <h1>Über mich</h1>
-            <p className="about-page__subtitle">Der Mann hinter dem Helm.</p>
-          </div>
+        <div className="about-page__profile">
+          <img
+            src={about?.profileImage || 'https://picsum.photos/seed/portrait/600/800'}
+            alt="Krawallbruder"
+            className="about-page__avatar"
+          />
+        </div>
+        <div className="about-page__hero-inner">
+          <p className="about-page__subtitle">Der Mann hinter dem Helm.</p>
+          <h1>Über mich</h1>
         </div>
       </div>
 
-      {/* Stats */}
+      {/* ── Stats strip ── */}
       {about?.stats && (
         <div className="about-page__stats">
-          <div className="container about-page__stats-grid">
-            {about.stats.touren && (
-              <div className="about-page__stat">
-                <span className="about-page__stat-value">{about.stats.touren}</span>
-                <span className="about-page__stat-label">Touren</span>
+          <div className="about-page__stats-grid">
+            {[
+              { val: about.stats.touren, label: 'Touren' },
+              { val: (about.stats.km ?? 0).toLocaleString('de-DE'), label: 'Kilometer' },
+              { val: about.stats.laender, label: 'Länder' },
+              { val: about.stats.jahre, label: 'Jahre' },
+            ].map(({ val, label }) => (
+              <div key={label} className="about-page__stat">
+                <span className="about-page__stat-value">{val}</span>
+                <span className="about-page__stat-label">{label}</span>
               </div>
-            )}
-            {about.stats.km && (
-              <div className="about-page__stat">
-                <span className="about-page__stat-value">{about.stats.km.toLocaleString('de-DE')}</span>
-                <span className="about-page__stat-label">Kilometer</span>
-              </div>
-            )}
-            {about.stats.laender && (
-              <div className="about-page__stat">
-                <span className="about-page__stat-value">{about.stats.laender}</span>
-                <span className="about-page__stat-label">Länder</span>
-              </div>
-            )}
-            {about.stats.jahre && (
-              <div className="about-page__stat">
-                <span className="about-page__stat-value">{about.stats.jahre}</span>
-                <span className="about-page__stat-label">Jahre auf zwei Rädern</span>
-              </div>
-            )}
+            ))}
           </div>
         </div>
       )}
 
-      <div className="container about-page__content">
+      {/* ── Text content ── */}
+      <div className="about-page__content container">
         {about?.content && (
           <div
             className="blog-content about-page__text"
@@ -78,7 +66,6 @@ export default function AboutMe() {
           />
         )}
 
-        {/* YouTube-Sektion */}
         <div className="about-page__youtube">
           <h2>YouTube-Kanal</h2>
           <p>
@@ -91,10 +78,11 @@ export default function AboutMe() {
             rel="noopener noreferrer"
             className="btn btn-primary"
           >
-            Zum YouTube-Kanal
+            Zum YouTube-Kanal →
           </a>
         </div>
       </div>
+
     </div>
   )
 }

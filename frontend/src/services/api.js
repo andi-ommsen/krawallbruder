@@ -33,3 +33,79 @@ export const fetchAboutPage = () =>
   api.get('/about_pages')
 
 export default api
+
+// ── Admin API ──────────────────────────────────────────────────────────────
+
+const adminApi = axios.create({
+  baseURL: `${API_BASE}/api`,
+  headers: {
+    'Accept': 'application/ld+json',
+    'Content-Type': 'application/ld+json',
+  },
+})
+
+adminApi.interceptors.request.use((config) => {
+  const token = localStorage.getItem('adminToken')
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`
+  }
+  return config
+})
+
+export const adminLogin = (username, password) =>
+  axios.post(`${API_BASE}/api/admin/login`, { username, password })
+
+// Blog Posts
+export const adminFetchPosts = (params = {}) =>
+  adminApi.get('/blog_posts', { params: { ...params, pagination: false } })
+
+export const adminFetchPost = (id) =>
+  adminApi.get(`/blog_posts/${id}`)
+
+export const adminCreatePost = (data) =>
+  adminApi.post('/blog_posts', data)
+
+export const adminUpdatePost = (id, data) =>
+  adminApi.put(`/blog_posts/${id}`, data)
+
+export const adminDeletePost = (id) =>
+  adminApi.delete(`/blog_posts/${id}`)
+
+// Bikes
+export const adminFetchBikes = () =>
+  adminApi.get('/bikes', { params: { pagination: false } })
+
+export const adminFetchBike = (id) =>
+  adminApi.get(`/bikes/${id}`)
+
+export const adminCreateBike = (data) =>
+  adminApi.post('/bikes', data)
+
+export const adminUpdateBike = (id, data) =>
+  adminApi.put(`/bikes/${id}`, data)
+
+export const adminDeleteBike = (id) =>
+  adminApi.delete(`/bikes/${id}`)
+
+// YouTube Videos
+export const adminFetchVideos = () =>
+  adminApi.get('/you_tube_videos', { params: { pagination: false } })
+
+export const adminFetchVideo = (id) =>
+  adminApi.get(`/you_tube_videos/${id}`)
+
+export const adminCreateVideo = (data) =>
+  adminApi.post('/you_tube_videos', data)
+
+export const adminUpdateVideo = (id, data) =>
+  adminApi.put(`/you_tube_videos/${id}`, data)
+
+export const adminDeleteVideo = (id) =>
+  adminApi.delete(`/you_tube_videos/${id}`)
+
+// About Page
+export const adminFetchAbout = () =>
+  adminApi.get('/about_pages')
+
+export const adminUpdateAbout = (id, data) =>
+  adminApi.put(`/about_pages/${id}`, data)

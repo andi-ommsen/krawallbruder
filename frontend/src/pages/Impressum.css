@@ -1,0 +1,33 @@
+.impressum {
+  padding-top: var(--space-3xl);
+  padding-bottom: var(--space-3xl);
+  max-width: 760px;
+}
+
+.impressum__title {
+  font-family: var(--font-headline);
+  font-size: clamp(2rem, 5vw, 3rem);
+  margin-bottom: var(--space-2xl);
+}
+
+.impressum__section {
+  margin-bottom: var(--space-2xl);
+}
+
+.impressum__section h2 {
+  font-family: var(--font-headline);
+  font-size: 1.3rem;
+  margin-bottom: var(--space-sm);
+  color: var(--color-accent);
+}
+
+.impressum__section p {
+  line-height: 1.8;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-sm);
+}
+
+.impressum__section a {
+  color: var(--color-accent);
+  text-decoration: underline;
+}
