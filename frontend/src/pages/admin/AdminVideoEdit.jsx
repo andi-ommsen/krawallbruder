@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import ImageUpload from '../../components/ImageUpload'
+import '../../components/ImageUpload.css'
 import {
   adminFetchVideo,
   adminCreateVideo,
@@ -91,10 +93,11 @@ export default function AdminVideoEdit() {
           <input className="admin-form__input" value={form.youtubeUrl} onChange={set('youtubeUrl')} placeholder="https://youtube.com/watch?v=…" required />
         </div>
 
-        <div className="admin-form__group">
-          <label className="admin-form__label">Thumbnail-URL</label>
-          <input className="admin-form__input" value={form.thumbnail} onChange={set('thumbnail')} placeholder="https://…" />
-        </div>
+        <ImageUpload
+          label="Thumbnail"
+          value={form.thumbnail}
+          onChange={(url) => setForm((p) => ({ ...p, thumbnail: url }))}
+        />
 
         <div className="admin-form__row">
           <div className="admin-form__group">

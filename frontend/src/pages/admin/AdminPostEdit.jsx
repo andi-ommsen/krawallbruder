@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import ImageUpload from '../../components/ImageUpload'
+import '../../components/ImageUpload.css'
 import {
   adminFetchPost,
   adminCreatePost,
@@ -152,10 +154,11 @@ export default function AdminPostEdit() {
           <textarea className="admin-form__textarea" style={{ minHeight: '300px', fontFamily: 'monospace', fontSize: '0.85rem' }} value={form.content} onChange={set('content')} required />
         </div>
 
-        <div className="admin-form__group">
-          <label className="admin-form__label">Titelbild-URL</label>
-          <input className="admin-form__input" value={form.featuredImage} onChange={set('featuredImage')} placeholder="https://…" />
-        </div>
+        <ImageUpload
+          label="Titelbild"
+          value={form.featuredImage}
+          onChange={(url) => setForm((p) => ({ ...p, featuredImage: url }))}
+        />
 
         <div className="admin-form__group">
           <label className="admin-form__label">YouTube-URL</label>

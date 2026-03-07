@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import { adminFetchAbout, adminUpdateAbout } from '../../services/api'
+import ImageUpload from '../../components/ImageUpload'
+import '../../components/ImageUpload.css'
 
 export default function AdminAbout() {
   const [aboutId, setAboutId] = useState(null)
@@ -71,10 +73,11 @@ export default function AdminAbout() {
       {error && <div className="admin-notice admin-notice--error">{error}</div>}
       {success && <div className="admin-notice admin-notice--success">{success}</div>}
       <form onSubmit={handleSubmit} className="admin-form">
-        <div className="admin-form__group">
-          <label className="admin-form__label">Profilbild-URL</label>
-          <input className="admin-form__input" value={form.profileImage} onChange={set('profileImage')} placeholder="https://…" />
-        </div>
+        <ImageUpload
+          label="Profilbild"
+          value={form.profileImage}
+          onChange={(url) => setForm((p) => ({ ...p, profileImage: url }))}
+        />
 
         <div className="admin-form__group">
           <label className="admin-form__label">Inhalt (HTML) *</label>

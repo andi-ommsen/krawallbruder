@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { adminFetchBike, adminCreateBike, adminUpdateBike } from '../../services/api'
+import ImageUpload from '../../components/ImageUpload'
+import '../../components/ImageUpload.css'
 
 const EMPTY = {
   name: '',
@@ -116,10 +118,11 @@ export default function AdminBikeEdit() {
           />
         </div>
 
-        <div className="admin-form__group">
-          <label className="admin-form__label">Titelbild-URL</label>
-          <input className="admin-form__input" value={form.featuredImage} onChange={set('featuredImage')} placeholder="https://…" />
-        </div>
+        <ImageUpload
+          label="Titelbild"
+          value={form.featuredImage}
+          onChange={(url) => setForm((p) => ({ ...p, featuredImage: url }))}
+        />
 
         <div className="admin-form__group">
           <label className="admin-form__label">Technische Daten (JSON-Objekt)</label>
