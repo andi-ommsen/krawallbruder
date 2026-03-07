@@ -14,7 +14,7 @@ export default function BlogCard({ post }) {
 
   return (
     <article className="blog-card card">
-      <Link to={`/touren/${post.slug}`} className="blog-card__image-link">
+      <Link to={`/blog/${post.slug}`} className="blog-card__image-link">
         <img
           src={post.featuredImage || 'https://picsum.photos/seed/default/800/450'}
           alt={post.title}
@@ -29,7 +29,7 @@ export default function BlogCard({ post }) {
       <div className="blog-card__body">
         <time className="blog-card__date">{date}</time>
         <h3 className="blog-card__title">
-          <Link to={`/touren/${post.slug}`}>{post.title}</Link>
+          <Link to={`/blog/${post.slug}`}>{post.title}</Link>
         </h3>
         {excerpt && <p className="blog-card__excerpt">{excerpt}</p>}
 
@@ -39,7 +39,7 @@ export default function BlogCard({ post }) {
               {post.bike.name}
             </Link>
           )}
-          <Link to={`/touren/${post.slug}`} className="btn btn-primary btn-sm">
+          <Link to={`/blog/${post.slug}`} className="btn btn-primary btn-sm">
             Weiterlesen →
           </Link>
         </div>

@@ -49,8 +49,8 @@ export default function Blog() {
     <div className="blog-page">
       <div className="blog-page__hero">
         <div className="container">
-          <h1>Tourenberichte</h1>
-          <p>Alle Fahrten, alle Erlebnisse, ohne Filter.</p>
+          <h1>Blog</h1>
+          <p>Touren, Konzerte, Abenteuer – ohne Filter.</p>
         </div>
       </div>
 
@@ -72,7 +72,7 @@ export default function Blog() {
           <form className="blog-page__search" onSubmit={handleSearch}>
             <input
               type="search"
-              placeholder="Touren durchsuchen…"
+              placeholder="Beiträge durchsuchen…"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               className="blog-page__search-input"

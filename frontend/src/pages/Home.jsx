@@ -44,6 +44,21 @@ export default function Home() {
   return (
     <div className="home">
 
+      {/* ── Intro Tile ── */}
+      <section className="hs home-intro">
+        <div className="hs__body">
+          <span className="hs__label">Krawallbruder</span>
+          <h2 className="hs__title">Motorrad.<br />Musik.<br />Leben.</h2>
+          <p className="hs__text">
+            Touren über Alpenpässe, Konzerte in verrauchten Hallen, ehrliche Berichte ohne Hochglanz-Filter.
+            Hier schreibt einer, der fährt und hinschaut – auf zwei Rädern und zu Fuß vor der Bühne.
+          </p>
+        </div>
+        <div className="hs__image home-intro__logo-tile">
+          <img src="/logo.png" alt="Krawallbruder Logo" className="home-intro__logo" />
+        </div>
+      </section>
+
       {/* ── Section 1: Featured Tour ── */}
       {!loading && featuredPost && (
         <section className="hs">
@@ -55,15 +70,15 @@ export default function Home() {
             />
           </div>
           <div className="hs__body">
-            <span className="hs__label">Touren</span>
+            <span className="hs__label">Blog</span>
             <h2 className="hs__title">{featuredPost.title}</h2>
             {featuredPost.excerpt && (
               <p className="hs__text">{featuredPost.excerpt}</p>
             )}
-            <Link to={`/touren/${featuredPost.slug}`} className="hs__cta">
+            <Link to={`/blog/${featuredPost.slug}`} className="hs__cta">
               Weiterlesen →
             </Link>
-            <Link to="/touren" className="hs__sub">Alle Touren ansehen</Link>
+            <Link to="/blog" className="hs__sub">Alle Beiträge ansehen</Link>
           </div>
         </section>
       )}
@@ -160,14 +175,14 @@ export default function Home() {
       {morePosts.length > 0 && (
         <section className="home-posts">
           <div className="home-posts__header container">
-            <span className="section-title">Weitere Touren</span>
-            <Link to="/touren" className="home-posts__all">Alle ansehen →</Link>
+            <span className="section-title">Weitere Beiträge</span>
+            <Link to="/blog" className="home-posts__all">Alle ansehen →</Link>
           </div>
           <div className="home-posts__grid">
             {morePosts.map((post) => (
               <Link
                 key={post['@id']}
-                to={`/touren/${post.slug}`}
+                to={`/blog/${post.slug}`}
                 className="home-post-item"
               >
                 <div className="home-post-item__image">

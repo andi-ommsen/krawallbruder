@@ -61,6 +61,8 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
+  text-align: center;
   padding: 5rem 6rem;
   gap: 1.8rem;
   border-left: 1px solid #000;
@@ -83,7 +85,7 @@
 .hs__title {
   font-family: var(--font-headline);
   font-size: clamp(2.6rem, 5.5vw, 6.5rem);
-  line-height: 0.93;
+  line-height: 1.1;
   color: #000;
   text-transform: uppercase;
   letter-spacing: 0.02em;
@@ -127,6 +129,22 @@
 
 .hs__sub:hover {
   color: #000;
+}
+
+/* ── Intro Tile ── */
+.home-intro__logo-tile {
+  background: #111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem;
+}
+
+.home-intro__logo {
+  width: 100%;
+  max-width: 720px;
+  height: auto;
+  object-fit: contain !important;
 }
 
 /* ── Stats Strip ── */

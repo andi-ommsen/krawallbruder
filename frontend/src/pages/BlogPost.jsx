@@ -129,13 +129,13 @@ export default function BlogPost() {
           {/* Navigation */}
           <nav className="blog-post__navigation">
             {prevNext.prev && (
-              <Link to={`/touren/${prevNext.prev.slug}`} className="blog-post__nav-link blog-post__nav-link--prev">
+              <Link to={`/blog/${prevNext.prev.slug}`} className="blog-post__nav-link blog-post__nav-link--prev">
                 <span className="blog-post__nav-label">← Vorheriger Beitrag</span>
                 <span className="blog-post__nav-title">{prevNext.prev.title}</span>
               </Link>
             )}
             {prevNext.next && (
-              <Link to={`/touren/${prevNext.next.slug}`} className="blog-post__nav-link blog-post__nav-link--next">
+              <Link to={`/blog/${prevNext.next.slug}`} className="blog-post__nav-link blog-post__nav-link--next">
                 <span className="blog-post__nav-label">Nächster Beitrag →</span>
                 <span className="blog-post__nav-title">{prevNext.next.title}</span>
               </Link>

@@ -41,8 +41,8 @@ function App() {
           {/* Public routes */}
           <Route element={<PublicLayout />}>
             <Route path="/" element={<Home />} />
-            <Route path="/touren" element={<Blog />} />
-            <Route path="/touren/:slug" element={<BlogPost />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/:slug" element={<BlogPost />} />
             <Route path="/bikes" element={<Bikes />} />
             <Route path="/bikes/:slug" element={<BikeDetail />} />
             <Route path="/ueber-mich" element={<AboutMe />} />

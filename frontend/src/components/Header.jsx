@@ -3,7 +3,7 @@ import { NavLink, Link } from 'react-router-dom'
 import './Header.css'
 
 const navLinks = [
-  { to: '/touren', label: 'Touren' },
+  { to: '/blog', label: 'Blog' },
   { to: '/bikes', label: 'Bikes' },
   { to: '/ueber-mich', label: 'Über mich' },
   { to: '/youtube', label: 'YouTube' },
@@ -27,7 +27,11 @@ export default function Header() {
           onClick={() => setMenuOpen(true)}
           aria-label="Menü öffnen"
         >
-          Menü
+          <svg width="22" height="16" viewBox="0 0 22 16" fill="none" aria-hidden="true">
+            <line x1="0" y1="1" x2="22" y2="1" stroke="currentColor" strokeWidth="1.5"/>
+            <line x1="0" y1="8" x2="22" y2="8" stroke="currentColor" strokeWidth="1.5"/>
+            <line x1="0" y1="15" x2="22" y2="15" stroke="currentColor" strokeWidth="1.5"/>
+          </svg>
         </button>
 
         <Link to="/" className="header__wordmark" onClick={close}>
