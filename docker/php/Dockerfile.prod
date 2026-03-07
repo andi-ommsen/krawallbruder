@@ -1,0 +1,30 @@
+FROM php:8.2-fpm
+
+# System-Abhängigkeiten
+RUN apt-get update && apt-get install -y \
+    git curl libpq-dev libzip-dev zip unzip \
+    && docker-php-ext-install pdo pdo_pgsql pgsql zip opcache \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Opcache (Production)
+COPY docker/php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
+
+WORKDIR /var/www/html
+
+# Backend-Code ins Image kopieren
+COPY backend/ .
+
+# Dependencies installieren (kein dev)
+RUN composer install --no-dev --optimize-autoloader --no-interaction
+
+# Symfony Cache vorwärmen
+RUN APP_ENV=prod php bin/console cache:warmup --env=prod 2>/dev/null || true
+
+# var/ muss schreibbar sein
+RUN mkdir -p var/cache var/log && chmod -R 777 var/
+
+EXPOSE 9000
+CMD ["php-fpm"]

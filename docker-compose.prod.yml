@@ -1,17 +1,54 @@
-version: '3.9'
+networks:
+  krawallbruder-network:
+    driver: bridge
 
-# Production-Overrides: docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+volumes:
+  db_data:
+
 services:
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile        # Multi-Stage Build → statische Dateien via Nginx
-    volumes: []                     # keine Volumes in Production
-    environment:
-      - VITE_API_URL=https://api.krawallbruder.de   # Production-URL anpassen
 
+  # ── Nginx: serviert Frontend (statisch) + proxied /api zu PHP ────────────
+  nginx:
+    build:
+      context: .
+      dockerfile: docker/nginx/Dockerfile.prod
+      args:
+        VITE_API_URL: ${VITE_API_URL}
+    ports:
+      - "127.0.0.1:8080:80"   # nur localhost – SSL läuft über Host-Nginx
+    networks:
+      - krawallbruder-network
+    depends_on:
+      - php
+    restart: unless-stopped
+
+  # ── PHP-FPM: Symfony Backend (Code direkt im Image) ──────────────────────
   php:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile.prod
+    env_file: .env.prod
+    networks:
+      - krawallbruder-network
+    depends_on:
+      database:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ── PostgreSQL ────────────────────────────────────────────────────────────
+  database:
+    image: postgres:16-alpine
     environment:
-      - APP_ENV=prod
-      - APP_DEBUG=0
-    volumes: []                     # keine Volumes in Production
+      POSTGRES_DB: ${POSTGRES_DB:-krawallbruder}
+      POSTGRES_USER: ${POSTGRES_USER:-kb_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - krawallbruder-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-kb_user} -d ${POSTGRES_DB:-krawallbruder}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
