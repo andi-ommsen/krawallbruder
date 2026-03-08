@@ -20,8 +20,8 @@ COPY backend/ .
 # APP_ENV=prod setzen damit Post-Install-Scripts nicht MakerBundle laden
 ENV APP_ENV=prod
 
-# Dependencies installieren (kein dev)
-RUN composer install --no-dev --optimize-autoloader --no-interaction
+# Dependencies installieren – keine Post-Install-Scripts (brauchen Runtime-Env)
+RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
 
 # Symfony Cache vorwärmen
 RUN APP_ENV=prod php bin/console cache:warmup --env=prod 2>/dev/null || true
