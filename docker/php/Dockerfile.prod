@@ -17,6 +17,9 @@ WORKDIR /var/www/html
 # Backend-Code ins Image kopieren
 COPY backend/ .
 
+# APP_ENV=prod setzen damit Post-Install-Scripts nicht MakerBundle laden
+ENV APP_ENV=prod
+
 # Dependencies installieren (kein dev)
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
