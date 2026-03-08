@@ -26,14 +26,15 @@ jobs:
             git pull origin master
 
             # Docker Images bauen und Container neu starten
+            # --env-file: Variablen für docker-compose Substitution (${VAR}) UND Container
             VITE_API_URL=${{ secrets.VITE_API_URL }} \
-            docker compose -f docker-compose.prod.yml build --no-cache
+            docker compose --env-file .env.prod -f docker-compose.prod.yml build --no-cache
 
-            docker compose -f docker-compose.prod.yml up -d --remove-orphans
+            docker compose --env-file .env.prod -f docker-compose.prod.yml up -d --remove-orphans
 
             # Kurz warten bis PHP-Container bereit ist
             sleep 5
-            docker compose -f docker-compose.prod.yml exec -T php \
+            docker compose --env-file .env.prod -f docker-compose.prod.yml exec -T php \
               php bin/console doctrine:migrations:migrate --no-interaction --env=prod
 
             # Alte Images aufräumen
