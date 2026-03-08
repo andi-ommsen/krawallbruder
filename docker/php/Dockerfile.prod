@@ -12,6 +12,9 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Opcache (Production)
 COPY docker/php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 
+# FPM Pool-Config: clear_env=no damit Docker env vars sichtbar sind
+COPY docker/php/www.conf /usr/local/etc/php-fpm.d/www.conf
+
 WORKDIR /var/www/html
 
 # Backend-Code ins Image kopieren
