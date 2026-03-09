@@ -1,0 +1,31 @@
+# Git
+.git
+.github
+
+# Node dependencies (werden im Container neu installiert)
+frontend/node_modules
+
+# Vite build output (wird im Container gebaut)
+frontend/dist
+
+# Env-Dateien (nie in den Build-Kontext!)
+# .env.production wird explizit ausgeschlossen, damit Vite
+# beim Build nur den ARG VITE_API_URL nutzt und nicht die Datei
+frontend/.env.production
+frontend/.env.local
+frontend/.env*.local
+
+# Backend-Secrets
+backend/.env.local
+backend/.env.prod
+.env.prod
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
