@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { adminFetchAbout, adminUpdateAbout } from '../../services/api'
+import { adminFetchAbout, adminCreateAbout, adminUpdateAbout } from '../../services/api'
 import ImageUpload from '../../components/ImageUpload'
 import '../../components/ImageUpload.css'
 
@@ -56,7 +56,12 @@ export default function AdminAbout() {
       },
     }
     try {
-      await adminUpdateAbout(aboutId, payload)
+      if (aboutId) {
+        await adminUpdateAbout(aboutId, payload)
+      } else {
+        const res = await adminCreateAbout(payload)
+        setAboutId(res.data['@id'].split('/').pop())
+      }
       setSuccess('Seite gespeichert.')
     } catch (err) {
       setError(err.response?.data?.['hydra:description'] ?? 'Fehler beim Speichern.')

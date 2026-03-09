@@ -107,5 +107,8 @@ export const adminDeleteVideo = (id) =>
 export const adminFetchAbout = () =>
   adminApi.get('/about_pages')
 
+export const adminCreateAbout = (data) =>
+  adminApi.post('/about_pages', data)
+
 export const adminUpdateAbout = (id, data) =>
   adminApi.put(`/about_pages/${id}`, data)
