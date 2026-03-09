@@ -29,8 +29,8 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction --no-script
 # Symfony Cache vorwärmen
 RUN APP_ENV=prod php bin/console cache:warmup --env=prod 2>/dev/null || true
 
-# var/ muss schreibbar sein
-RUN mkdir -p var/cache var/log && chmod -R 777 var/
+# var/ und uploads/ müssen schreibbar sein
+RUN mkdir -p var/cache var/log public/uploads && chmod -R 777 var/ public/uploads
 
 EXPOSE 9000
 CMD ["php-fpm"]
