@@ -24,8 +24,7 @@ COPY backend/ .
 ENV APP_ENV=prod
 
 # Dependencies installieren – keine Post-Install-Scripts (brauchen Runtime-Env)
-# composer update löst neue Pakete auf (z.B. rate-limiter) und aktualisiert das Lock-File
-RUN composer update --no-dev --optimize-autoloader --no-interaction --no-scripts
+RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
 
 # Symfony Cache vorwärmen
 RUN APP_ENV=prod php bin/console cache:warmup --env=prod 2>/dev/null || true
