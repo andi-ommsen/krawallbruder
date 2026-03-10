@@ -3,6 +3,12 @@ import { fetchYouTubeVideos, fetchBikes } from '../services/api'
 import VideoPlayer from '../components/VideoPlayer'
 import './YouTube.css'
 
+function getYouTubeId(url) {
+  if (!url) return ''
+  const m = url.match(/(?:v=|youtu\.be\/)([^&\n?#]+)/)
+  return m ? m[1] : ''
+}
+
 export default function YouTube() {
   const [videos, setVideos] = useState([])
   const [bikes, setBikes] = useState([])
@@ -70,17 +76,31 @@ export default function YouTube() {
                 onKeyDown={(e) => e.key === 'Enter' && setModalVideo(video)}
               >
                 <div className="youtube-card__thumb-wrap">
-                  <img
-                    src={video.thumbnail || 'https://picsum.photos/seed/yt/640/360'}
-                    alt={video.title}
-                    className="youtube-card__thumb"
-                    loading="lazy"
-                  />
-                  <div className="youtube-card__play">
-                    <svg viewBox="0 0 24 24" fill="currentColor" width="48" height="48">
-                      <path d="M8 5v14l11-7z"/>
-                    </svg>
-                  </div>
+                  {video.thumbnail ? (
+                    <>
+                      <img
+                        src={video.thumbnail}
+                        alt={video.title}
+                        className="youtube-card__thumb"
+                        loading="lazy"
+                      />
+                      <div className="youtube-card__play">
+                        <svg viewBox="0 0 24 24" fill="currentColor" width="48" height="48">
+                          <path d="M8 5v14l11-7z"/>
+                        </svg>
+                      </div>
+                    </>
+                  ) : (
+                    <iframe
+                      className="youtube-card__embed"
+                      src={`https://www.youtube-nocookie.com/embed/${getYouTubeId(video.youtubeUrl)}`}
+                      title={video.title}
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      loading="lazy"
+                      onClick={(e) => e.stopPropagation()}
+                    />
+                  )}
                 </div>
                 <div className="youtube-card__info">
                   <h3 className="youtube-card__title">{video.title}</h3>
