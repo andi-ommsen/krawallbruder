@@ -1,9 +1,145 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import DOMPurify from 'dompurify'
-import { fetchBlogPost, fetchBlogPosts } from '../services/api'
+import { fetchBlogPost, fetchBlogPosts, fetchComments, postComment } from '../services/api'
 import VideoPlayer from '../components/VideoPlayer'
 import './BlogPost.css'
+
+const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY || '1x00000000000000000000AA'
+
+function CommentSection({ postId }) {
+  const [comments, setComments] = useState([])
+  const [authorName, setAuthorName] = useState('')
+  const [content, setContent] = useState('')
+  const [submitting, setSubmitting] = useState(false)
+  const [success, setSuccess] = useState(false)
+  const [formError, setFormError] = useState(null)
+  const turnstileRef = useRef(null)
+  const widgetIdRef = useRef(null)
+
+  useEffect(() => {
+    fetchComments(postId)
+      .then((res) => setComments(res.data['hydra:member'] || []))
+      .catch(() => {})
+  }, [postId])
+
+  useEffect(() => {
+    if (!turnstileRef.current) return
+    const render = () => {
+      if (window.turnstile && turnstileRef.current && widgetIdRef.current === null) {
+        widgetIdRef.current = window.turnstile.render(turnstileRef.current, {
+          sitekey: TURNSTILE_SITE_KEY,
+        })
+      }
+    }
+    if (window.turnstile) {
+      render()
+    } else {
+      const interval = setInterval(() => {
+        if (window.turnstile) {
+          render()
+          clearInterval(interval)
+        }
+      }, 200)
+      return () => clearInterval(interval)
+    }
+  }, [])
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setFormError(null)
+
+    const token = window.turnstile?.getResponse(widgetIdRef.current) || ''
+    if (!token) {
+      setFormError('Bitte das Captcha bestätigen.')
+      return
+    }
+
+    setSubmitting(true)
+    try {
+      const res = await postComment({ authorName, content, blogPostId: postId, captchaToken: token })
+      setComments((prev) => [...prev, res.data])
+      setAuthorName('')
+      setContent('')
+      setSuccess(true)
+      window.turnstile?.reset(widgetIdRef.current)
+      setTimeout(() => setSuccess(false), 5000)
+    } catch (err) {
+      const msg = err.response?.data?.error || 'Fehler beim Senden. Bitte erneut versuchen.'
+      setFormError(msg)
+      window.turnstile?.reset(widgetIdRef.current)
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  return (
+    <section className="blog-comments">
+      <h2 className="blog-comments__title">Kommentare ({comments.length})</h2>
+
+      {comments.length > 0 && (
+        <ul className="blog-comments__list">
+          {comments.map((c) => (
+            <li key={c['@id'] || c.id} className="blog-comment">
+              <div className="blog-comment__meta">
+                <span className="blog-comment__author">{c.authorName}</span>
+                <time className="blog-comment__date">
+                  {new Date(c.createdAt).toLocaleDateString('de-DE', {
+                    day: '2-digit', month: 'long', year: 'numeric',
+                  })}
+                </time>
+              </div>
+              <p className="blog-comment__text">{DOMPurify.sanitize(c.content)}</p>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <form className="blog-comments__form" onSubmit={handleSubmit}>
+        <h3 className="blog-comments__form-title">Kommentar schreiben</h3>
+
+        {success && (
+          <div className="blog-comments__success">Kommentar wurde veröffentlicht!</div>
+        )}
+        {formError && (
+          <div className="blog-comments__error">{formError}</div>
+        )}
+
+        <div className="blog-comments__field">
+          <label htmlFor="comment-author">Dein Name</label>
+          <input
+            id="comment-author"
+            type="text"
+            value={authorName}
+            onChange={(e) => setAuthorName(e.target.value)}
+            maxLength={100}
+            required
+            placeholder="Max Mustermann"
+          />
+        </div>
+
+        <div className="blog-comments__field">
+          <label htmlFor="comment-content">Kommentar</label>
+          <textarea
+            id="comment-content"
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            maxLength={2000}
+            required
+            rows={5}
+            placeholder="Dein Kommentar…"
+          />
+        </div>
+
+        <div ref={turnstileRef} className="blog-comments__captcha" />
+
+        <button type="submit" className="btn" disabled={submitting}>
+          {submitting ? 'Wird gesendet…' : 'Kommentar abschicken'}
+        </button>
+      </form>
+    </section>
+  )
+}
 
 export default function BlogPost() {
   const { slug } = useParams()
@@ -54,6 +190,8 @@ export default function BlogPost() {
   const handleCopyLink = () => {
     navigator.clipboard.writeText(window.location.href)
   }
+
+  const postId = post['@id'] ? post['@id'].split('/').pop() : post.id
 
   return (
     <article className="blog-post">
@@ -125,6 +263,9 @@ export default function BlogPost() {
               🔗 Link kopieren
             </button>
           </div>
+
+          {/* Kommentare */}
+          <CommentSection postId={postId} />
 
           {/* Navigation */}
           <nav className="blog-post__navigation">

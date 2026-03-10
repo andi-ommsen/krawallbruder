@@ -112,3 +112,19 @@ export const adminCreateAbout = (data) =>
 
 export const adminUpdateAbout = (id, data) =>
   adminApi.put(`/about_pages/${id}`, data)
+
+// Comments (public)
+export const fetchComments = (blogPostId) =>
+  api.get('/comments', { params: { 'blogPost': blogPostId, pagination: false } })
+
+export const postComment = (data) =>
+  axios.post(`${API_BASE}/api/comments`, data, {
+    headers: { 'Content-Type': 'application/json' },
+  })
+
+// Comments (admin)
+export const adminFetchComments = () =>
+  adminApi.get('/comments', { params: { pagination: false } })
+
+export const adminDeleteComment = (id) =>
+  adminApi.delete(`/comments/${id}`)

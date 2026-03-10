@@ -48,11 +48,11 @@ class BlogPost
     private ?Uuid $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['blog_post:read'])]
+    #[Groups(['blog_post:read', 'comment:read'])]
     private ?string $title = null;
 
     #[ORM\Column(length: 255, unique: true)]
-    #[Groups(['blog_post:read'])]
+    #[Groups(['blog_post:read', 'comment:read'])]
     private ?string $slug = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]

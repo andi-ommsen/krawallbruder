@@ -20,6 +20,7 @@ import AdminBikeEdit from './pages/admin/AdminBikeEdit'
 import AdminVideos from './pages/admin/AdminVideos'
 import AdminVideoEdit from './pages/admin/AdminVideoEdit'
 import AdminAbout from './pages/admin/AdminAbout'
+import AdminComments from './pages/admin/AdminComments'
 
 function PublicLayout() {
   return (
@@ -64,6 +65,7 @@ function App() {
             <Route path="videos/neu" element={<AdminVideoEdit />} />
             <Route path="videos/:id" element={<AdminVideoEdit />} />
             <Route path="about" element={<AdminAbout />} />
+            <Route path="comments" element={<AdminComments />} />
           </Route>
         </Routes>
       </AuthProvider>

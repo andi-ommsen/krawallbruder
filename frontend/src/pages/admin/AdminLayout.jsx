@@ -36,6 +36,9 @@ export default function AdminLayout() {
           <NavLink to="/geheim-admin/about" className={({ isActive }) => isActive ? 'active' : ''}>
             Über mich
           </NavLink>
+          <NavLink to="/geheim-admin/comments" className={({ isActive }) => isActive ? 'active' : ''}>
+            Kommentare
+          </NavLink>
         </nav>
         <button className="admin-sidebar__logout" onClick={handleLogout}>
           Abmelden
