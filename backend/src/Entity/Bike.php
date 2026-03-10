@@ -41,11 +41,11 @@ class Bike
     private ?Uuid $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['bike:read', 'blog_post:read'])]
+    #[Groups(['bike:read', 'blog_post:read', 'video:read'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255, unique: true)]
-    #[Groups(['bike:read', 'blog_post:read'])]
+    #[Groups(['bike:read', 'blog_post:read', 'video:read'])]
     private ?string $slug = null;
 
     #[ORM\Column]
