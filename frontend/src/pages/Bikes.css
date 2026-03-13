@@ -20,7 +20,8 @@
 }
 
 .bikes-page__content {
-  padding: 2rem 0 var(--space-3xl);
+  padding-top: 3rem;
+  padding-bottom: var(--space-3xl);
 }
 
 .bikes-page__content .grid-3 {

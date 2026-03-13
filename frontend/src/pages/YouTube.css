@@ -20,7 +20,7 @@
 }
 
 .youtube-page__content {
-  padding: 0 var(--space-lg) var(--space-3xl);
+  padding: 2rem var(--space-lg) var(--space-3xl);
 }
 
 .youtube-page__filters {
