@@ -4,13 +4,11 @@ import BlogCard from '../components/BlogCard'
 import './Blog.css'
 
 const ITEMS_PER_PAGE = 10
-const CATEGORIES = ['Alle', 'Vespa', 'Voge', 'Indian', 'Alpentouren', 'Kurztrip']
 
 export default function Blog() {
   const [posts, setPosts] = useState([])
   const [total, setTotal] = useState(0)
   const [page, setPage] = useState(1)
-  const [category, setCategory] = useState('')
   const [search, setSearch] = useState('')
   const [searchInput, setSearchInput] = useState('')
   const [loading, setLoading] = useState(true)
@@ -20,7 +18,6 @@ export default function Blog() {
     setLoading(true)
     setError(null)
     const params = { page, itemsPerPage: ITEMS_PER_PAGE }
-    if (category) params.category = category
     if (search) params.title = search
 
     fetchBlogPosts(params)
@@ -30,14 +27,9 @@ export default function Blog() {
       })
       .catch(() => setError('Beiträge konnten nicht geladen werden.'))
       .finally(() => setLoading(false))
-  }, [page, category, search])
+  }, [page, search])
 
   const totalPages = Math.ceil(total / ITEMS_PER_PAGE)
-
-  const handleCategoryChange = (cat) => {
-    setCategory(cat === 'Alle' ? '' : cat)
-    setPage(1)
-  }
 
   const handleSearch = (e) => {
     e.preventDefault()
@@ -55,20 +47,8 @@ export default function Blog() {
       </div>
 
       <div className="container blog-page__content">
-        {/* Filter & Suche */}
+        {/* Suche */}
         <div className="blog-page__filters">
-          <div className="blog-page__categories">
-            {CATEGORIES.map((cat) => (
-              <button
-                key={cat}
-                className={`blog-page__cat-btn${(cat === 'Alle' && !category) || cat === category ? ' active' : ''}`}
-                onClick={() => handleCategoryChange(cat)}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
-
           <form className="blog-page__search" onSubmit={handleSearch}>
             <input
               type="search"
