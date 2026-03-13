@@ -3,7 +3,7 @@ import './BikeCard.css'
 
 export default function BikeCard({ bike }) {
   return (
-    <article className="bike-card card">
+    <Link to={`/bikes/${bike.slug}`} className="bike-card card">
       <div className="bike-card__image-wrap">
         <img
           src={bike.featuredImage || 'https://picsum.photos/seed/bike/800/500'}
@@ -32,10 +32,8 @@ export default function BikeCard({ bike }) {
           </table>
         )}
 
-        <Link to={`/bikes/${bike.slug}`} className="btn btn-primary">
-          Zur Maschine →
-        </Link>
+        <span className="btn btn-primary">Zur Maschine →</span>
       </div>
-    </article>
+    </Link>
   )
 }
