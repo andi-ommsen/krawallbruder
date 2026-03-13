@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
@@ -31,6 +33,7 @@ use Symfony\Component\Uid\Uuid;
     normalizationContext: ['groups' => ['bike:read']],
     order: ['sortOrder' => 'ASC'],
 )]
+#[ApiFilter(SearchFilter::class, properties: ['slug' => 'exact'])]
 class Bike
 {
     #[ORM\Id]

@@ -11,6 +11,7 @@ export default function BikeDetail() {
   const [posts, setPosts] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [lightboxImg, setLightboxImg] = useState(null)
 
   useEffect(() => {
     setLoading(true)
@@ -30,6 +31,13 @@ export default function BikeDetail() {
       .catch(() => setError('Daten konnten nicht geladen werden.'))
       .finally(() => setLoading(false))
   }, [slug])
+
+  useEffect(() => {
+    if (!lightboxImg) return
+    const onKey = (e) => { if (e.key === 'Escape') setLightboxImg(null) }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [lightboxImg])
 
   if (loading) return <div className="page-loading">Lade Bike-Daten…</div>
   if (error) return <div className="container"><div className="error-message">{error}</div></div>
@@ -92,6 +100,7 @@ export default function BikeDetail() {
                     alt={`${bike.name} – Bild ${i + 1}`}
                     className="bike-detail__gallery-img"
                     loading="lazy"
+                    onClick={() => setLightboxImg(img)}
                   />
                 ))}
               </div>
@@ -117,6 +126,19 @@ export default function BikeDetail() {
       <div className="container bike-detail__back">
         <Link to="/bikes" className="btn btn-outline">← Zurück zu allen Bikes</Link>
       </div>
+
+      {/* Lightbox */}
+      {lightboxImg && (
+        <div className="lightbox" onClick={() => setLightboxImg(null)}>
+          <button className="lightbox__close" onClick={() => setLightboxImg(null)}>×</button>
+          <img
+            src={lightboxImg}
+            alt={bike.name}
+            className="lightbox__img"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      )}
     </div>
   )
 }
