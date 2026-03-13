@@ -39,25 +39,6 @@ export default function AboutMe() {
         </div>
       </div>
 
-      {/* ── Stats strip ── */}
-      {about?.stats && (
-        <div className="about-page__stats">
-          <div className="about-page__stats-grid">
-            {[
-              { val: about.stats.touren, label: 'Touren' },
-              { val: (about.stats.km ?? 0).toLocaleString('de-DE'), label: 'Kilometer' },
-              { val: about.stats.laender, label: 'Länder' },
-              { val: about.stats.jahre, label: 'Jahre' },
-            ].map(({ val, label }) => (
-              <div key={label} className="about-page__stat">
-                <span className="about-page__stat-value">{val}</span>
-                <span className="about-page__stat-label">{label}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
       {/* ── Text content ── */}
       <div className="about-page__content container">
         {about?.content && (
@@ -83,6 +64,25 @@ export default function AboutMe() {
           </a>
         </div>
       </div>
+
+      {/* ── Stats strip ── */}
+      {about?.stats && (
+        <div className="about-page__stats">
+          <div className="about-page__stats-grid">
+            {[
+              { val: about.stats.touren, label: 'Touren' },
+              { val: (about.stats.km ?? 0).toLocaleString('de-DE'), label: 'Kilometer' },
+              { val: about.stats.laender, label: 'Länder' },
+              { val: about.stats.jahre, label: 'Jahre' },
+            ].map(({ val, label }) => (
+              <div key={label} className="about-page__stat">
+                <span className="about-page__stat-value">{val}</span>
+                <span className="about-page__stat-label">{label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
     </div>
   )
