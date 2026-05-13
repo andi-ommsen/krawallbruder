@@ -57,3 +57,10 @@ services:
       timeout: 5s
       retries: 5
     restart: unless-stopped
+
+  # ── Redis: Cache & Sessions (nur intern erreichbar) ────────────────────────
+  redis:
+    image: redis:7-alpine
+    networks:
+      - krawallbruder-network
+    restart: unless-stopped
