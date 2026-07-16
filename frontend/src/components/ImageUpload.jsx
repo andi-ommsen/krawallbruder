@@ -24,6 +24,11 @@ export default function ImageUpload({ value, onChange, label = 'Bild-URL' }) {
         headers: { Authorization: `Bearer ${token}` },
         body: formData,
       })
+      const contentType = res.headers.get('content-type') || ''
+      if (!contentType.includes('application/json')) {
+        const text = await res.text()
+        throw new Error(`Unerwartete Server-Antwort (HTTP ${res.status}). Prüfe die API-URL und den Admin-Token.`)
+      }
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Upload fehlgeschlagen.')
       onChange(data.url)
