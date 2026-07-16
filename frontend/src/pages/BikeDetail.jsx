@@ -67,6 +67,7 @@ export default function BikeDetail() {
             <h2>Meine Geschichte</h2>
             <div
               className="blog-content"
+              style={{ whiteSpace: 'pre-wrap' }}
               dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(bike.description) }}
             />
           </section>
