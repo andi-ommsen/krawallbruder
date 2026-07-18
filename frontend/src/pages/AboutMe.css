@@ -92,6 +92,7 @@
   font-size: 1.05rem;
   line-height: 1.85;
   color: #333;
+  white-space: pre-line;
 }
 
 /* ── YouTube section ── */

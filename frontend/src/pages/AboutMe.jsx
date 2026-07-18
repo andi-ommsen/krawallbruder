@@ -36,17 +36,17 @@ export default function AboutMe() {
         <div className="about-page__hero-inner">
           <p className="about-page__subtitle">Der Mann hinter dem Helm.</p>
           <h1>Über mich</h1>
+          {about?.content && (
+            <div
+              className="blog-content about-page__text"
+              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(about.content) }}
+            />
+          )}
         </div>
       </div>
 
       {/* ── Text content ── */}
       <div className="about-page__content container">
-        {about?.content && (
-          <div
-            className="blog-content about-page__text"
-            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(about.content) }}
-          />
-        )}
 
         <div className="about-page__youtube">
           <h2>YouTube-Kanal</h2>
