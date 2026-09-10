@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+         bootstrap="tests/bootstrap.php"
+         colors="true"
+         cacheDirectory="var/cache/phpunit">
+    <testsuites>
+        <testsuite name="Backend tests">
+            <directory>tests</directory>
+        </testsuite>
+    </testsuites>
+
+    <extensions>
+        <bootstrap class="DAMA\DoctrineTestBundle\PHPUnit\PHPUnitExtension" />
+    </extensions>
+
+    <php>
+        <env name="APP_ENV" value="test" force="true" />
+        <env name="APP_DEBUG" value="1" force="true" />
+        <env name="KERNEL_CLASS" value="App\Kernel" force="true" />
+        <env name="SYMFONY_DEPRECATIONS_HELPER" value="max[total]=0" force="true" />
+        <server name="APP_ENV" value="test" force="true" />
+        <server name="APP_DEBUG" value="1" force="true" />
+        <server name="KERNEL_CLASS" value="App\Kernel" force="true" />
+        <server name="SYMFONY_DEPRECATIONS_HELPER" value="max[total]=0" force="true" />
+    </php>
+</phpunit>

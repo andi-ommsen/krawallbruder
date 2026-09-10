@@ -1,0 +1,4 @@
+services:
+    App\Service\TurnstileVerifier: '@App\Tests\Double\AcceptingTurnstileVerifier'
+
+    App\Tests\Double\AcceptingTurnstileVerifier: ~

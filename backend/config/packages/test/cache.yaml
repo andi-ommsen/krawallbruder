@@ -1,0 +1,7 @@
+framework:
+    cache:
+        app: cache.adapter.filesystem
+        prefix_seed: krawallbruder_test
+        pools:
+            cache.rate_limiter:
+                adapter: cache.adapter.filesystem
