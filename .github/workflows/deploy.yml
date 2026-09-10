@@ -35,7 +35,7 @@ jobs:
           php-version: '8.3'
           extensions: pdo_pgsql
           coverage: none
-      - run: composer install --no-interaction --prefer-dist
+      - run: composer install --no-interaction --prefer-dist --no-scripts
       - run: composer test
       - run: composer audit --locked
 
