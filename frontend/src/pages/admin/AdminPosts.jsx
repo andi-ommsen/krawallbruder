@@ -10,7 +10,7 @@ export default function AdminPosts() {
   const load = () => {
     setLoading(true)
     adminFetchPosts()
-      .then((res) => setPosts(res.data['hydra:member'] ?? []))
+      .then((res) => setPosts(res.data.member ?? []))
       .catch(() => {})
       .finally(() => setLoading(false))
   }

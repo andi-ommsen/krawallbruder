@@ -22,8 +22,8 @@ export default function Blog() {
 
     fetchBlogPosts(params)
       .then((res) => {
-        setPosts(res.data['hydra:member'] || [])
-        setTotal(res.data['hydra:totalItems'] || 0)
+        setPosts(res.data.member || [])
+        setTotal(res.data.totalItems || 0)
       })
       .catch(() => setError('Beiträge konnten nicht geladen werden.'))
       .finally(() => setLoading(false))

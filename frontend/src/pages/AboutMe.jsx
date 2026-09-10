@@ -11,7 +11,7 @@ export default function AboutMe() {
   useEffect(() => {
     fetchAboutPage()
       .then((res) => {
-        const members = res.data['hydra:member'] || []
+        const members = res.data.member || []
         if (members.length > 0) setAbout(members[0])
       })
       .catch(() => setError('Seite konnte nicht geladen werden.'))

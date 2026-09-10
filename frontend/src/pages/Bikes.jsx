@@ -10,7 +10,7 @@ export default function Bikes() {
 
   useEffect(() => {
     fetchBikes()
-      .then((res) => setBikes(res.data['hydra:member'] || []))
+      .then((res) => setBikes(res.data.member || []))
       .catch(() => setError('Bikes konnten nicht geladen werden.'))
       .finally(() => setLoading(false))
   }, [])

@@ -8,7 +8,7 @@ export default function AdminComments() {
   const load = () => {
     setLoading(true)
     adminFetchComments()
-      .then((res) => setComments(res.data['hydra:member'] ?? []))
+      .then((res) => setComments(res.data.member ?? []))
       .catch(() => {})
       .finally(() => setLoading(false))
   }

@@ -10,7 +10,7 @@ export default function AdminBikes() {
   const load = () => {
     setLoading(true)
     adminFetchBikes()
-      .then((res) => setBikes(res.data['hydra:member'] ?? []))
+      .then((res) => setBikes(res.data.member ?? []))
       .catch(() => {})
       .finally(() => setLoading(false))
   }

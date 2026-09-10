@@ -19,7 +19,7 @@ function CommentSection({ postId }) {
 
   useEffect(() => {
     fetchComments(postId)
-      .then((res) => setComments(res.data['hydra:member'] || []))
+      .then((res) => setComments(res.data.member || []))
       .catch(() => {})
   }, [postId])
 
@@ -152,7 +152,7 @@ export default function BlogPost() {
     setLoading(true)
     fetchBlogPost(slug)
       .then((res) => {
-        const members = res.data['hydra:member'] || []
+        const members = res.data.member || []
         if (members.length === 0) {
           setError('Beitrag nicht gefunden.')
           return
@@ -167,7 +167,7 @@ export default function BlogPost() {
     // Vorherigen und nächsten Beitrag laden
     fetchBlogPosts({ itemsPerPage: 100 })
       .then((res) => {
-        const all = res.data['hydra:member'] || []
+        const all = res.data.member || []
         const idx = all.findIndex((p) => p.slug === slug)
         setPrevNext({
           prev: idx > 0 ? all[idx - 1] : null,

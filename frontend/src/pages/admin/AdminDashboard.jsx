@@ -12,9 +12,9 @@ export default function AdminDashboard() {
       adminFetchVideos(),
     ]).then(([posts, bikes, videos]) => {
       setCounts({
-        posts: posts.data['hydra:member']?.length ?? 0,
-        bikes: bikes.data['hydra:member']?.length ?? 0,
-        videos: videos.data['hydra:member']?.length ?? 0,
+        posts: posts.data.member?.length ?? 0,
+        bikes: bikes.data.member?.length ?? 0,
+        videos: videos.data.member?.length ?? 0,
       })
     }).catch(() => {})
   }, [])

@@ -20,7 +20,7 @@ export default function AdminAbout() {
   useEffect(() => {
     adminFetchAbout()
       .then((r) => {
-        const items = r.data['hydra:member'] ?? []
+        const items = r.data.member ?? []
         if (items.length > 0) {
           const d = items[0]
           const stats = d.stats ?? {}

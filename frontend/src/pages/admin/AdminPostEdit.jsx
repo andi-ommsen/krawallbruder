@@ -33,7 +33,7 @@ export default function AdminPostEdit() {
   const [loading, setLoading] = useState(!isNew)
 
   useEffect(() => {
-    adminFetchBikes().then((r) => setBikes(r.data['hydra:member'] ?? []))
+    adminFetchBikes().then((r) => setBikes(r.data.member ?? []))
   }, [])
 
   useEffect(() => {

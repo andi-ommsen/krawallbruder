@@ -23,8 +23,8 @@ export default function YouTube() {
       fetchBikes(),
     ])
       .then(([vidRes, bikeRes]) => {
-        setVideos(vidRes.data['hydra:member'] || [])
-        setBikes(bikeRes.data['hydra:member'] || [])
+        setVideos(vidRes.data.member || [])
+        setBikes(bikeRes.data.member || [])
       })
       .catch(() => setError('Videos konnten nicht geladen werden.'))
       .finally(() => setLoading(false))

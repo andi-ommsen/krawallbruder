@@ -10,7 +10,7 @@ export default function AdminVideos() {
   const load = () => {
     setLoading(true)
     adminFetchVideos()
-      .then((res) => setVideos(res.data['hydra:member'] ?? []))
+      .then((res) => setVideos(res.data.member ?? []))
       .catch(() => {})
       .finally(() => setLoading(false))
   }

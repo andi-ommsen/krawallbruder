@@ -29,12 +29,12 @@ export default function Home() {
       fetchAboutPage(),
     ])
       .then(([postsRes, bikesRes, videosRes, aboutRes]) => {
-        const postList = postsRes.data['hydra:member'] || []
+        const postList = postsRes.data.member || []
         setFeaturedPost(postList[0] || null)
         setMorePosts(postList.slice(1, 4))
-        setFeaturedBike((bikesRes.data['hydra:member'] || [])[0] || null)
-        setFeaturedVideo((videosRes.data['hydra:member'] || [])[0] || null)
-        const about = (aboutRes.data['hydra:member'] || [])[0]
+        setFeaturedBike((bikesRes.data.member || [])[0] || null)
+        setFeaturedVideo((videosRes.data.member || [])[0] || null)
+        const about = (aboutRes.data.member || [])[0]
         setStats(about?.stats || null)
       })
       .catch(console.error)

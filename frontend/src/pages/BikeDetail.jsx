@@ -20,13 +20,13 @@ export default function BikeDetail() {
       fetchBlogPosts({ 'bike.slug': slug, itemsPerPage: 6 }),
     ])
       .then(([bikeRes, postsRes]) => {
-        const bikes = bikeRes.data['hydra:member'] || []
+        const bikes = bikeRes.data.member || []
         if (bikes.length === 0) {
           setError('Bike nicht gefunden.')
           return
         }
         setBike(bikes[0])
-        setPosts(postsRes.data['hydra:member'] || [])
+        setPosts(postsRes.data.member || [])
       })
       .catch(() => setError('Daten konnten nicht geladen werden.'))
       .finally(() => setLoading(false))
