@@ -40,8 +40,8 @@ class UploadController extends AbstractController
             return new JsonResponse(['error' => 'Keine Datei übermittelt.'], Response::HTTP_BAD_REQUEST);
         }
 
-        if ($file->getSize() > 10 * 1024 * 1024) {
-            return new JsonResponse(['error' => 'Datei zu groß (max. 10 MB).'], Response::HTTP_UNPROCESSABLE_ENTITY);
+        if ($file->getSize() > 8 * 1024 * 1024) {
+            return new JsonResponse(['error' => 'Datei zu groß (max. 8 MB).'], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         // Validate extension against explicit whitelist

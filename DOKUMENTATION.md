@@ -224,6 +224,7 @@ Nach dem Login (mit Username/Passwort aus den Env-Variablen) wird ein Token gesp
 - Blog-Posts erstellen, bearbeiten, löschen
 - Bikes verwalten (inkl. Bilder-Upload und Galerie-Sortierung)
 - Bild-Upload direkt im Browser
+- Bilddateien bis einschließlich 8 MiB (JPG, PNG, WebP, GIF)
 
 ---
 
