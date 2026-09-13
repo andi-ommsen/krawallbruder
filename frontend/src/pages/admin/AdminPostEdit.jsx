@@ -113,11 +113,10 @@ export default function AdminPostEdit() {
             <label className="admin-form__label">Kategorie</label>
             <select className="admin-form__select" value={form.category} onChange={set('category')}>
               <option value="">– keine –</option>
-              <option value="Alpentouren">Alpentouren</option>
-              <option value="Kurztrip">Kurztrip</option>
-              <option value="Vespa">Vespa</option>
-              <option value="Voge">Voge</option>
-              <option value="Indian">Indian</option>
+              <option value="Motorrad">Motorrad</option>
+              <option value="Privates">Privates</option>
+              <option value="Konzerte">Konzerte</option>
+              <option value="IT-Themen">IT-Themen</option>
             </select>
           </div>
           <div className="admin-form__group">
