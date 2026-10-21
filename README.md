@@ -11,6 +11,7 @@ Motorradtouren, Roller-Erlebnisse und Asphalt-Abenteuer.
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/) (inkl. Docker Compose)
 - [Node.js 20+](https://nodejs.org/) (für lokale Frontend-Entwicklung ohne Docker)
 - [Composer](https://getcomposer.org/) (für lokale Symfony-Entwicklung ohne Docker)
+- PHP 8.3.36 für lokale Backend-Entwicklung ohne Docker; Docker und CI verwenden dieselbe Patch-Version.
 
 ---
 
@@ -44,6 +45,38 @@ docker-compose exec php php bin/console doctrine:fixtures:load --no-interaction
 # 8. Frontend-Abhängigkeiten installieren (Development)
 cd frontend && npm install
 ```
+
+### PHP-Sicherheitsupdate vom 21.10.2026
+
+Die PHP-Dockerfiles für Entwicklung und Produktion sowie die GitHub-Workflows
+`ci.yml` und `deploy.yml` verwenden PHP **8.3.36**. Diese Version behebt
+CVE-2026-109618 und CVE-2026-109619, die unauthentifizierte Codeausführung
+ermöglichen können. Details: [PHP-Sicherheitsmeldung](https://www.php.net/archive/2026.php#2026-10-21-5).
+
+Zusätzlich sind in `backend/composer.lock` die Pakete `symfony/expression-language`
+und `symfony/http-foundation` auf **7.4.21** aktualisiert. Damit werden
+[CVE-2026-109449](https://symfony.com/cve-2026-109449) und
+[CVE-2026-108082](https://symfony.com/cve-2026-108082) einschließlich der
+Nachbesserungen an den ersten Fixes behoben.
+
+Ein Neustart bestehender Container installiert das PHP-Update nicht. Für die
+lokale Docker-Umgebung das PHP-Image neu bauen und den Container neu erstellen:
+
+```bash
+docker compose build --pull php
+docker compose up -d php
+docker compose exec php php -v
+docker compose exec php composer audit --locked
+```
+
+Voraussetzung ist, dass das offizielle Image `php:8.3.36-fpm` auf Docker Hub
+veröffentlicht ist. Bei `no such manifest` ist der Build bis zur Veröffentlichung
+blockiert; eine ältere PHP-Version enthält die Sicherheitskorrekturen nicht.
+
+Ein Push auf `master` startet den Workflow **Deploy to VPS**. Erst nach
+erfolgreichen Backend-Tests, Composer-Sicherheitsaudit und Frontend-Build baut
+dieser die Produktionsimages auf dem VPS und erstellt die Container neu.
+Ein fehlgeschlagener Build bestätigt keine Installation des Updates.
 
 ### Zugriff
 
