@@ -39,6 +39,14 @@ jobs:
       - run: composer test
       - run: composer audit --locked
 
+  php-image:
+    name: PHP image build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build --pull --tag krawallbruder-php:ci docker/php
+      - run: docker run --rm krawallbruder-php:ci php-fpm -t
+
   frontend:
     name: Frontend build
     runs-on: ubuntu-latest

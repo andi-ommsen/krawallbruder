@@ -55,10 +55,18 @@ jobs:
       - run: npm ci
       - run: npm run build
 
+  php-image:
+    name: PHP image build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build --pull --tag krawallbruder-php:ci docker/php
+      - run: docker run --rm krawallbruder-php:ci php-fpm -t
+
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
-    needs: [test, frontend-build]
+    needs: [test, frontend-build, php-image]
 
     steps:
       - name: Deploy via SSH
@@ -84,6 +92,8 @@ jobs:
 
             # Kurz warten bis PHP-Container bereit ist
             sleep 5
+            docker compose --env-file .env.prod -f docker-compose.prod.yml exec -T php \
+              php -r 'echo PHP_VERSION, PHP_EOL; exit(PHP_VERSION === "8.3.36" ? 0 : 1);'
             docker compose --env-file .env.prod -f docker-compose.prod.yml exec -T php \
               php bin/console doctrine:migrations:migrate --no-interaction --env=prod
 

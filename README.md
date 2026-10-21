@@ -69,12 +69,20 @@ docker compose exec php php -v
 docker compose exec php composer audit --locked
 ```
 
-Voraussetzung ist, dass das offizielle Image `php:8.3.36-fpm` auf Docker Hub
-veröffentlicht ist. Bei `no such manifest` ist der Build bis zur Veröffentlichung
-blockiert; eine ältere PHP-Version enthält die Sicherheitskorrekturen nicht.
+Da das offizielle Image `php:8.3.36-fpm` bei der Veröffentlichung des Updates
+noch fehlte, bauen beide Dockerfiles PHP 8.3.36 aus dem offiziellen Quellarchiv
+auf Basis des verfügbaren Images `php:8.3.35-fpm-bookworm`. Das gemeinsame Skript
+`docker/php/build-security-release.sh` prüft die festgelegte SHA-256-Prüfsumme
+und baut PHP mit den Optionen des offiziellen FPM-Images. Der Build bricht ab,
+wenn CLI oder FPM danach nicht Version 8.3.36 melden. Der Quellbuild benötigt
+zusätzliche Zeit und verwendet höchstens zwei parallele Compiler-Prozesse.
+Die ältere Basis wird vor der Installation der Anwendung durch die korrigierte
+PHP-Version ersetzt. Sobald das offizielle 8.3.36-Image verfügbar ist, kann der
+zusätzliche Quellbuild durch dieses Image ersetzt werden.
 
 Ein Push auf `master` startet den Workflow **Deploy to VPS**. Erst nach
-erfolgreichen Backend-Tests, Composer-Sicherheitsaudit und Frontend-Build baut
+erfolgreichen Backend-Tests, Composer-Sicherheitsaudit, PHP-Image-Build mit
+FPM-Konfigurationsprüfung und Frontend-Build baut
 dieser die Produktionsimages auf dem VPS und erstellt die Container neu.
 Ein fehlgeschlagener Build bestätigt keine Installation des Updates.
 
