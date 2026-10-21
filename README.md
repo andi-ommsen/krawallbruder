@@ -85,6 +85,14 @@ FPM-Konfigurationsprüfung und Frontend-Build baut
 dieser die Produktionsimages auf dem VPS und erstellt die Container neu.
 Ein fehlgeschlagener Build bestätigt keine Installation des Updates.
 
+Der temporäre Workflow **Monitor PHP security update** prüft alle 30 Minuten,
+ob `php:8.3.36-fpm-bookworm` ein Linux-amd64-Image ausliefert. Sobald es verfügbar
+ist, startet er **Deploy to VPS** erneut, sofern für den aktuellen `master`-Stand
+noch kein Lauf aktiv oder erfolgreich ist. Nach erfolgreichem Deployment
+deaktiviert sich der Monitor bei der nächsten Prüfung selbst. Die Ergebnisse
+stehen in der Zusammenfassung des jeweiligen Workflow-Laufs. GitHub kann
+geplante Läufe bei hoher Auslastung verzögern.
+
 ### Zugriff
 
 | Dienst     | URL                      | Beschreibung                    |

@@ -1,0 +1,54 @@
+name: Monitor PHP security update
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: write
+
+concurrency:
+  group: php-update-monitor
+  cancel-in-progress: false
+
+jobs:
+  check:
+    name: Check PHP image and retry deployment
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PHP_IMAGE: php:8.3.36-fpm-bookworm
+    steps:
+      - name: Check deployment and image availability
+        shell: bash
+        run: |
+          set -euo pipefail
+          head_sha=$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/master" --jq .object.sha)
+          deploy_runs=$(gh api "repos/$GITHUB_REPOSITORY/actions/workflows/deploy.yml/runs?branch=master&head_sha=$head_sha&per_page=20")
+
+          if jq -e 'any(.workflow_runs[]; .conclusion == "success")' <<< "$deploy_runs" > /dev/null; then
+            echo 'Deployment succeeded. Disabling the temporary monitor.' >> "$GITHUB_STEP_SUMMARY"
+            gh workflow disable php-update-monitor.yml --repo "$GITHUB_REPOSITORY"
+            exit 0
+          fi
+
+          if jq -e 'any(.workflow_runs[]; .status != "completed")' <<< "$deploy_runs" > /dev/null; then
+            echo 'A deployment workflow is already running. No duplicate started.' >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          if ! php_manifest=$(timeout 45s docker buildx imagetools inspect "$PHP_IMAGE" --raw); then
+            echo 'PHP image is not yet available. Checking again in 30 minutes.' >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          if ! jq -e 'any(.manifests[]?; .platform.os == "linux" and .platform.architecture == "amd64")' <<< "$php_manifest" > /dev/null; then
+            echo 'PHP image has no Linux amd64 manifest yet. Checking again in 30 minutes.' >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          gh workflow run deploy.yml --ref master --repo "$GITHUB_REPOSITORY"
+          echo 'Patched PHP image is available. Deployment workflow started for master.' >> "$GITHUB_STEP_SUMMARY"
